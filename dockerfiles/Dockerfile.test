@@ -1,0 +1,17 @@
+FROM golang:1.20.5-alpine3.18
+
+# update
+RUN apk update && apk upgrade
+RUN rm -rf /var/cache/apk/*
+
+# copy
+COPY ./go.mod ./go.sum /src/
+COPY ./main.go ./main_test.go /src/
+
+WORKDIR /src
+
+# test
+ENV GOOS=linux
+ENV GOARCH=amd64
+RUN go mod download
+CMD ["go","test","-v","./..."]
