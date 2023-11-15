@@ -1,0 +1,14 @@
+FROM golang:1.20.4-alpine3.18
+
+# update
+RUN apk update && apk upgrade
+RUN rm -rf /var/cache/apk/*
+
+# prepare for hotreload
+RUN go install github.com/cespare/reflex@latest
+
+WORKDIR /src
+
+ENV GOOS=linux
+ENV GOARCH=amd64
+CMD reflex -r '(\.go$|go\.mod)' -s go run main.go
